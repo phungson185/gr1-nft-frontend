@@ -1,0 +1,7 @@
+.cardContainer {
+  min-width: 300px;
+
+  &:hover {
+    box-shadow: 0 0 16px #2755ff99 !important;
+  }
+}

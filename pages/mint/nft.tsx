@@ -1,10 +1,12 @@
+import { AppBanner } from 'containers';
 import { PublicLayout } from 'layouts';
-import { Home } from 'views/Home';
+import { Create } from 'views/Create';
 
 const Page = () => {
   return (
     <PublicLayout>
-      <Home />
+      <AppBanner />
+      <Create />
     </PublicLayout>
   );
 };
