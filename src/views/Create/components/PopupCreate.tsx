@@ -3,7 +3,7 @@ import { CloseButton } from 'components';
 import { minterContract } from 'contracts';
 import { PopupController } from 'models/Common';
 import { useRouter } from 'next/router';
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { profileSelector } from 'reducers/profileSlice';
 import { systemSelector } from 'reducers/systemSlice';
@@ -16,12 +16,6 @@ import { IStatus, StepStatus } from '.';
 
 type PopupProps = PopupController & {
   values: any;
-};
-
-type ItemManyType = {
-  id: string;
-  tokenId?: string;
-  signature?: string;
 };
 
 const PopupCreate = ({ values, onClose }: PopupProps) => {
@@ -37,6 +31,8 @@ const PopupCreate = ({ values, onClose }: PopupProps) => {
   const isError = [signStatus, createStatus].includes('ERROR');
   const isSuccess = [createStatus].includes('SUCCESS');
 
+  const saved = useRef<string>();
+
   const onSign = async (isTryAgain?: boolean) => {
     setSignStatus(isTryAgain ? 'TRYAGAIN' : 'LOADING');
     const tokenId = randomTokenID();
@@ -49,9 +45,10 @@ const PopupCreate = ({ values, onClose }: PopupProps) => {
       async (error: any, result: any) => {
         if (error) {
           setSignStatus('ERROR');
+        } else {
+          setSignStatus('SUCCESS');
+          await onCreate();
         }
-        setSignStatus('SUCCESS');
-        await onCreate();
       },
     );
   };
@@ -65,7 +62,7 @@ const PopupCreate = ({ values, onClose }: PopupProps) => {
         gas: '1000000',
       });
 
-      await nftService.mint({
+      const minted = await nftService.mint({
         tokenId: mint.events.Transfer.returnValues.tokenId,
         name: values.name,
         description: values.description,
@@ -74,7 +71,7 @@ const PopupCreate = ({ values, onClose }: PopupProps) => {
         creatorAddress: mint.from,
         nftContract: nftContractAddress,
       });
-
+      saved.current = minted.id;
       queryClient.invalidateQueries('nftService.fetchItems');
       setCreateStatus('SUCCESS');
     } catch {

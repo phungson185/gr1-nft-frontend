@@ -13,8 +13,12 @@ const publicRoute = {
   },
   itemView: {
     path: '/items/[id]',
-    url: ({ id }: { id: string }) => `/items/${id}`,
+    url: (id: string) => `/items/${id}`,
     name: 'Item Details',
+  },
+  discover: {
+    path: '/discover',
+    name: 'Discover',
   },
 };
 

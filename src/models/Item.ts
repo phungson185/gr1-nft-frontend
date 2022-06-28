@@ -10,12 +10,7 @@ export type ItemType = {
   image: string;
   tokenId: string;
   nftContract: string;
-  listedOnMarket: boolean;
-  category: CategoryType;
-
-  sale?: SaleType;
-  owner: UserType;
-  creator: UserType;
+  creatorAddress: UserType;
 };
 
 export type ItemPaginateParams = PaginateParamsType & {
