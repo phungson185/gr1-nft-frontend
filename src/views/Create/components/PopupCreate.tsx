@@ -3,13 +3,14 @@ import { CloseButton } from 'components';
 import { minterContract } from 'contracts';
 import { PopupController } from 'models/Common';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { profileSelector } from 'reducers/profileSlice';
 import { systemSelector } from 'reducers/systemSlice';
 import { publicRoute } from 'routes';
 import { nftService, queryClient } from 'services';
 import { randomTokenID } from 'utils/common';
+import { useQuery } from 'react-query';
 import { signOnClient } from 'utils/signOnClient';
 import { IStatus, StepStatus } from '.';
 
@@ -36,7 +37,6 @@ const PopupCreate = ({ values, onClose }: PopupProps) => {
   const isError = [signStatus, createStatus].includes('ERROR');
   const isSuccess = [createStatus].includes('SUCCESS');
 
-
   const onSign = async (isTryAgain?: boolean) => {
     setSignStatus(isTryAgain ? 'TRYAGAIN' : 'LOADING');
     const tokenId = randomTokenID();
@@ -58,15 +58,23 @@ const PopupCreate = ({ values, onClose }: PopupProps) => {
 
   const onCreate = async (isTryAgain?: boolean) => {
     try {
-      console.log('count')
       setCreateStatus(isTryAgain ? 'TRYAGAIN' : 'LOADING');
       var mint = {} as any;
-      mint = await minterContract(nftContractAddress)
-        .methods.payToMint(address, values.image)
-        .send({
-          from: address,
-          gas: '1000000',
-        });
+      mint = await minterContract(nftContractAddress).methods.payToMint(address, values.image).send({
+        from: address,
+        gas: '1000000',
+      });
+
+      await nftService.mint({
+        tokenId: mint.events.Transfer.returnValues.tokenId,
+        name: values.name,
+        description: values.description,
+        image: values.image,
+        transactionHash: mint.transactionHash,
+        creatorAddress: mint.from,
+        nftContract: nftContractAddress,
+      });
+
       queryClient.invalidateQueries('nftService.fetchItems');
       setCreateStatus('SUCCESS');
     } catch {
@@ -74,10 +82,7 @@ const PopupCreate = ({ values, onClose }: PopupProps) => {
     }
   };
 
-  useEffect(() => {
-    onSign();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useQuery([''], () => onSign());
 
   return (
     <>
