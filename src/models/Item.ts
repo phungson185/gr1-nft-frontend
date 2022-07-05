@@ -1,6 +1,4 @@
 import { PaginateParamsType, PaginateType } from './Common';
-import { SaleType } from './Sale';
-import { CategoryType } from './System';
 import { UserType } from './User';
 
 export type ItemType = {
@@ -10,7 +8,8 @@ export type ItemType = {
   image: string;
   tokenId: string;
   nftContract: string;
-  creatorAddress: UserType;
+  creator: UserType;
+  owner: UserType;
 };
 
 export type ItemPaginateParams = PaginateParamsType & {
@@ -18,8 +17,6 @@ export type ItemPaginateParams = PaginateParamsType & {
   orderBy?: string;
   desc?: string;
   owner?: string;
-  categoryId?: string;
-  listedOnMarket?: string;
 };
 
 export type ItemPaginateType = PaginateType & {
@@ -34,24 +31,4 @@ export type ItemPaginateType = PaginateType & {
 
 export type ItemCreateType = {
   [key: string]: any;
-};
-
-export type SaleCreateType = {
-  id: string;
-  [key: string]: any;
-};
-
-export type GenerateHashMessageType = {
-  signature?: string;
-  tokenIds?: string[];
-};
-
-export type GenerateBuyHashMessageType = {
-  id: string;
-  paymentTokenId: string;
-  price: number | string;
-};
-
-export type GenerateCancelHashMessageType = {
-  id: string;
 };

@@ -3,14 +3,13 @@ import { CloseButton } from 'components';
 import { minterContract } from 'contracts';
 import { PopupController } from 'models/Common';
 import { useRouter } from 'next/router';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
+import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 import { profileSelector } from 'reducers/profileSlice';
 import { systemSelector } from 'reducers/systemSlice';
 import { publicRoute } from 'routes';
 import { nftService, queryClient } from 'services';
-import { randomTokenID } from 'utils/common';
-import { useQuery } from 'react-query';
 import { signOnClient } from 'utils/signOnClient';
 import { IStatus, StepStatus } from '.';
 
@@ -35,14 +34,12 @@ const PopupCreate = ({ values, onClose }: PopupProps) => {
 
   const onSign = async (isTryAgain?: boolean) => {
     setSignStatus(isTryAgain ? 'TRYAGAIN' : 'LOADING');
-    const tokenId = randomTokenID();
     signOnClient(
       {
         userAddress: address,
         nftContractAddress,
-        tokenId,
       },
-      async (error: any, result: any) => {
+      async (error: any) => {
         if (error) {
           setSignStatus('ERROR');
         } else {
@@ -68,7 +65,16 @@ const PopupCreate = ({ values, onClose }: PopupProps) => {
         description: values.description,
         image: values.image,
         transactionHash: mint.transactionHash,
-        creatorAddress: mint.from,
+        creator: {
+          address,
+          username: address,
+          avatar: '',
+        },
+        owner: {
+          address,
+          username: address,
+          avatar: '',
+        },
         nftContract: nftContractAddress,
       });
       saved.current = minted.id;

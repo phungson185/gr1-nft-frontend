@@ -11,7 +11,7 @@ type BoxUserProps = {
 const BoxUser = ({ image, label, name, url }: BoxUserProps) => {
   return (
     <div className='flex'>
-      {/* <Avatar sx={{ width: 52, height: 52, marginRight: 1 }} src={image} /> */}
+      <Avatar sx={{ width: 52, height: 52, marginRight: 1 }} src={image} />
       <div>
         <Typography color='textSecondary'>{label}</Typography>
         <Typography variant='subtitle2'>

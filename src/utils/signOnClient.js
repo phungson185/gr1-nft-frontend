@@ -1,6 +1,6 @@
 import { web3 } from 'contracts';
 
-export async function signOnClient({ userAddress, nftContractAddress, tokenId }, callback) {
+export async function signOnClient({ userAddress, nftContractAddress }, callback) {
   const msgParams = JSON.stringify({
     domain: {
       chainId: await web3.eth.getChainId(),
@@ -11,7 +11,6 @@ export async function signOnClient({ userAddress, nftContractAddress, tokenId },
       nft: nftContractAddress,
       minter: userAddress,
       to: userAddress,
-      tokenId,
     },
     primaryType: 'Mint',
     types: {
@@ -19,7 +18,6 @@ export async function signOnClient({ userAddress, nftContractAddress, tokenId },
         { name: 'nft', type: 'address' },
         { name: 'minter', type: 'address' },
         { name: 'to', type: 'address' },
-        { name: 'tokenId', type: 'uint256' },
       ],
     },
   });

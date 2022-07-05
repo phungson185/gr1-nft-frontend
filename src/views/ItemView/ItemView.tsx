@@ -1,11 +1,10 @@
 import { Container, Grid, Typography } from '@mui/material';
 import { ItemType } from 'models/Item';
 import { useQuery } from 'react-query';
-import { publicRoute } from 'routes';
 import { nftService } from 'services';
 import { shorten } from 'utils/common';
 import { BoxUser } from 'views/Cards';
-import { BoxInfo, BoxPrice, RelatedItem } from './components';
+import { RelatedItem } from './components';
 
 const ItemView = ({ item: apiItem }: { item: ItemType }) => {
   const { data: item } = useQuery(['nftService.getItem', { id: apiItem.id }], () => nftService.getItem(apiItem), {
@@ -30,15 +29,12 @@ const ItemView = ({ item: apiItem }: { item: ItemType }) => {
 
               <Grid container spacing={4} className='my-6'>
                 <Grid item sx={{ minWidth: 240 }}>
-                  <BoxUser
-                    // image={item.owner.avatar}
-                    label='Creator'
-                    name={shorten(item.creatorAddress)}
-                    // url={publicRoute.authorView.url(item.creator!)}
-                  />
+                  <BoxUser image={item.creator.avatar} label='Creator' name={shorten(item.creator.address)} />
+                </Grid>
+                <Grid item>
+                  <BoxUser image={item.owner.avatar} label='Owner' name={shorten(item.owner.address)} />
                 </Grid>
               </Grid>
-              <BoxInfo item={item!} />
             </div>
           </Grid>
         </Grid>
