@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { AppHeader } from 'containers';
+import { AppHeader, AppFooter } from 'containers';
 import { default as jwtDecode } from 'jwt-decode';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -23,14 +23,15 @@ const Controller = ({ children }: any) => {
 
   const { isSuccess } = useQuery(['fetchConfig'], () => systemService.fetchConfig(), {
     onSuccess: (data) => {
-      dispatch(saveSystem(data))
-    }
+      dispatch(saveSystem(data));
+    },
   });
 
   return (
     <>
       <AppHeader />
       <main>{children}</main>
+      <AppFooter />
     </>
   );
 };

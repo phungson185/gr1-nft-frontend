@@ -1,9 +1,11 @@
-import { Button, Container, Grid, Typography } from '@mui/material';
+import { Banner, Items } from './components';
 
 const Home = () => {
   return (
-    <Container className='py-10'>
-    </Container>
+    <>
+      <Banner />
+      <Items />
+    </>
   );
 };
 
