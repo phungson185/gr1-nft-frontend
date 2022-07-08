@@ -1,5 +1,4 @@
 import { Avatar, Typography } from '@mui/material';
-import { NextLink } from 'components';
 
 type BoxCommentProps = {
   image?: string;

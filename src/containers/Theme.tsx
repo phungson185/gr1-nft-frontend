@@ -3,7 +3,7 @@ import { default as DateAdapter } from '@mui/lab/AdapterLuxon';
 import { createTheme, responsiveFontSizes, ThemeProvider } from '@mui/material';
 
 export const appTheme = createTheme({
-  components: { 
+  components: {
     MuiContainer: {
       defaultProps: {
         maxWidth: 'xl',
