@@ -1,15 +1,33 @@
-import { Container, Grid, Typography } from '@mui/material';
+import { Button, Container, Grid, Paper, Typography } from '@mui/material';
+import { PerfectScrollbar, TextEditor } from 'components';
+import { CommentType } from 'models/Comment';
 import { ItemType } from 'models/Item';
-import { useQuery } from 'react-query';
-import { nftService } from 'services';
+import { useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
+import { profileSelector } from 'reducers/profileSlice';
+import { commentService, nftService } from 'services';
 import { shorten } from 'utils/common';
 import { BoxUser } from 'views/Cards';
-import { RelatedItem } from './components';
+import { BoxComment, RelatedItem } from './components';
 
 const ItemView = ({ item: apiItem }: { item: ItemType }) => {
+  const profile = useSelector(profileSelector);
+  const [comment, setComment] = useState('');
+  const [dataComment, setDataComment] = useState<CommentType[]>([]);
+
   const { data: item } = useQuery(['nftService.getItem', { id: apiItem.id }], () => nftService.getItem(apiItem), {
     placeholderData: apiItem,
+    onSuccess: (data) => {
+      setDataComment(data.comments);
+    },
   }) as { data: ItemType };
+
+  const { mutate: createComment } = useMutation(commentService.comment, {
+    onSuccess: (data) => {
+      setDataComment([data, ...dataComment]);
+    },
+  });
 
   return (
     <>
@@ -18,24 +36,47 @@ const ItemView = ({ item: apiItem }: { item: ItemType }) => {
           <Grid item lg={7}>
             <img src={item.image} className='rounded-2xl m-auto' style={{ maxHeight: 600 }} />
           </Grid>
-          <Grid item lg={5} className='flex flex-col'>
-            <div>
-              <Typography variant='h3' className='mb-4'>
-                {item.name}
-              </Typography>
-              <Typography variant='subtitle2' color='textSecondary' className='whitespace-pre-line'>
-                {item.description}
-              </Typography>
-
-              <Grid container spacing={4} className='my-6'>
-                <Grid item sx={{ minWidth: 240 }}>
-                  <BoxUser image={item.creator.avatar} label='Creator' name={shorten(item.creator.address)} />
-                </Grid>
-                <Grid item>
-                  <BoxUser image={item.owner.avatar} label='Owner' name={shorten(item.owner.address)} />
-                </Grid>
+          <Grid item lg={5}>
+            <Grid container spacing={4}>
+              <Grid item xs={8}>
+                <Typography variant='h3' className='mb-4'>
+                  {item.name}
+                </Typography>
+                <Typography variant='subtitle2' color='textSecondary' className='whitespace-pre-line'>
+                  {item.description}
+                </Typography>
               </Grid>
-            </div>
+              <Grid item xs={4}>
+                <BoxUser image={item.creator.avatar} label='Creator' name={shorten(item.creator.address)} />
+              </Grid>
+              <Grid item xs={12}>
+                <Paper className='p-6'>
+                  <Typography variant='subtitle1' color='textSecondary'>
+                    Comments
+                  </Typography>
+                  <TextEditor name='comments' onChangeComment={setComment} />
+                  <Button
+                    className='my-2'
+                    onClick={() =>
+                      createComment({
+                        itemId: item.id,
+                        content: comment,
+                        userAddress: profile.address!,
+                      })
+                    }
+                  >
+                    Send
+                  </Button>
+                  <PerfectScrollbar className='min-h-[19vh] pr-4 -mr-4'>
+                    <Paper className='flex flex-col gap-5 p-5'>
+                      {dataComment.map((comment, index) => (
+                        <BoxComment key={index} username={comment.userAddress} content={comment.content} />
+                      ))}
+                    </Paper>
+                  </PerfectScrollbar>
+                </Paper>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Container>

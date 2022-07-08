@@ -33,15 +33,13 @@ const Create = () => {
   const { control, handleSubmit, clearErrors, setValue, watch } = useForm();
   const values = watch();
 
-//   const { data: categories } = useQuery(['fetchCategories'], () => systemService.fetchCategories());
-
   const handleChangeFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     getBase64(file, setImage);
 
     const formData = new FormData();
     formData.append('image', file as Blob);
-    
+
     setImageLoading(true);
     fileService
       .uploadFile(formData)

@@ -1,3 +1,4 @@
+import { CommentType } from './Comment';
 import { PaginateParamsType, PaginateType } from './Common';
 import { UserType } from './User';
 
@@ -10,6 +11,7 @@ export type ItemType = {
   nftContract: string;
   creator: UserType;
   owner: UserType;
+  comments: CommentType[];
 };
 
 export type ItemPaginateParams = PaginateParamsType & {
