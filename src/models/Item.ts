@@ -12,6 +12,7 @@ export type ItemType = {
   creator: UserType;
   owner: UserType;
   comments: CommentType[];
+  transactionHash: string;
 };
 
 export type ItemPaginateParams = PaginateParamsType & {
