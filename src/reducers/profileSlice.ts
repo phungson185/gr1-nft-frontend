@@ -5,11 +5,8 @@ export type ProfileState = {
   isLoggedIn?: boolean;
   address?: string;
   accessToken?: string;
-
   username?: string;
   bio?: string;
-  email?: string;
-  ckeditor?: string;
   avatar?: string;
   cover?: string;
 };

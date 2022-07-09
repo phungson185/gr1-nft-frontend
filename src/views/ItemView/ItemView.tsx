@@ -54,7 +54,7 @@ const ItemView = ({ item: apiItem }: { item: ItemType }) => {
                   <Typography variant='subtitle1' color='textSecondary'>
                     Comments
                   </Typography>
-                  <TextEditor name='comments' onChangeComment={setComment} />
+                  <TextEditor name='comments' onChange={setComment} />
                   <Button
                     className='my-2'
                     onClick={() =>

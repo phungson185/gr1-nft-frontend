@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-const TextEditor = ({ name, onChangeComment }) => {
+const TextEditor = ({ name, onChange }) => {
   const [isReady, setIsReady] = useState(false);
 
   const editorRef = useRef();
@@ -22,7 +22,7 @@ const TextEditor = ({ name, onChangeComment }) => {
           editor={ClassicEditor}
           onChange={(event, editor) => {
             const data = editor.getData();
-            onChangeComment(data);
+            onChange(data);
           }}
         />
       )}

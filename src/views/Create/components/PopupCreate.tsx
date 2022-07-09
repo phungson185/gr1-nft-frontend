@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
-import { profileSelector } from 'reducers/profileSlice';
+import { profileSelector, ProfileState } from 'reducers/profileSlice';
 import { systemSelector } from 'reducers/systemSlice';
 import { publicRoute } from 'routes';
 import { nftService, queryClient } from 'services';
@@ -14,10 +14,11 @@ import { signOnClient } from 'utils/signOnClient';
 import { IStatus, StepStatus } from '.';
 
 type PopupProps = PopupController & {
+  profile: ProfileState;
   values: any;
 };
 
-const PopupCreate = ({ values, onClose }: PopupProps) => {
+const PopupCreate = ({ profile, values, onClose }: PopupProps) => {
   const router = useRouter();
   const { address } = useSelector(profileSelector);
   const { nftContractAddress } = useSelector(systemSelector);
@@ -68,12 +69,12 @@ const PopupCreate = ({ values, onClose }: PopupProps) => {
         creator: {
           address,
           username: address,
-          avatar: '',
+          avatar: profile.avatar,
         },
         owner: {
           address,
           username: address,
-          avatar: '',
+          avatar: profile.avatar,
         },
         nftContract: nftContractAddress,
       });

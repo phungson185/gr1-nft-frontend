@@ -9,7 +9,7 @@ import { publicRoute } from 'routes';
 import { nftService } from 'services';
 import { CardItem } from 'views/Cards';
 
-const Items = ({ address }: { address?: string }) => {
+const TabAssets = ({ address }: { address?: string }) => {
   const profile = useSelector(profileSelector);
   const isOwner = profile.address === address;
 
@@ -34,7 +34,7 @@ const Items = ({ address }: { address?: string }) => {
         {data?.pages.map(({ items }, index) => (
           <Fragment key={index}>
             {items.map((item) => (
-              <Grid item key={item.id} lg={3}>
+              <Grid item key={item.id} lg={4} sm={6} xs={12}>
                 <NextLink href={publicRoute.itemView.url(item.id)!}>
                   <a>
                     <CardItem item={item} />
@@ -50,4 +50,4 @@ const Items = ({ address }: { address?: string }) => {
   );
 };
 
-export default Items;
+export default TabAssets;

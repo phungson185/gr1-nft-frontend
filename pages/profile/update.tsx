@@ -1,11 +1,10 @@
-import { Profile } from 'views/Profile';
+import { ProfileUpdate } from 'views/Profile';
 import { PublicLayout } from 'layouts';
-import { AppBanner } from 'containers';
 
 const Home = () => {
   return (
     <PublicLayout>
-      <Profile />
+      <ProfileUpdate />
     </PublicLayout>
   );
 };

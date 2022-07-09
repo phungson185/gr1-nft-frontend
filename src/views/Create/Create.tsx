@@ -1,28 +1,27 @@
 import { Close } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 import {
-  Button,
   Container,
   Dialog,
-  FormControl,
-  FormHelperText,
-  IconButton,
+  FormControl, IconButton,
   Paper,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material';
-import { InputNumber, Spinner } from 'components';
+import { Spinner } from 'components';
 import { useRequiredLogin } from 'hooks';
 import { ItemType } from 'models/Item';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useQuery } from 'react-query';
-import { fileService, systemService } from 'services';
+import { useSelector } from 'react-redux';
+import { profileSelector } from 'reducers/profileSlice';
+import { fileService } from 'services';
 import { getBase64, merge } from 'utils/common';
 import { CardItem } from 'views/Cards';
 import { PopupCreate } from './components';
 
 const Create = () => {
+  const profile = useSelector(profileSelector);
   useRequiredLogin();
 
   const [open, setOpen] = useState(false);
@@ -180,7 +179,7 @@ const Create = () => {
       </div>
 
       <Dialog open={open} fullWidth maxWidth='xs'>
-        <PopupCreate values={values} onClose={() => setOpen(false)} />
+        <PopupCreate profile={profile} values={values} onClose={() => setOpen(false)} />
       </Dialog>
     </Container>
   );

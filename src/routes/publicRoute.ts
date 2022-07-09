@@ -20,6 +20,10 @@ const publicRoute = {
     path: '/discover',
     name: 'Discover',
   },
+  profileUpdate: {
+    path: '/profile/update',
+    name: 'Update',
+  },
 };
 
 export default publicRoute;
