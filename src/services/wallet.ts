@@ -33,7 +33,7 @@ const connectProvider = async () => {
 const connectWallet = async () => {
   try {
     await connectProvider();
-    let address;
+    let address: string;
     try {
       [address] = await web3.eth.requestAccounts();
     } catch {
@@ -47,7 +47,8 @@ const connectWallet = async () => {
     const { accessToken } = await authService.getToken({ address, signature });
     store.dispatch(signIn({ address, accessToken }));
 
-    const profile = await userService.getProfile();
+    const profile = await userService.getUserProfile({ address });
+    console.log(profile);
     store.dispatch(signIn({ ...profile }));
   } catch (error) {
     console.warn(error);

@@ -18,12 +18,23 @@ const ItemView = ({ item: apiItem }: { item: ItemType }) => {
 
   const { data: item } = useQuery(['nftService.getItem', { id: apiItem.id }], () => nftService.getItem(apiItem), {
     placeholderData: apiItem,
-    onSuccess: (data) => {
-      setDataComment(data.comments);
-    },
-  }) as { data: ItemType };
+  }) as {
+    data: ItemType;
+  };
 
-  const { mutate: createComment } = useMutation(commentService.comment, {
+  const { data: comments } = useQuery(
+    ['commentService.getComments', { id: apiItem.id }],
+    () => commentService.getComments(apiItem.id),
+    {
+      onSuccess: (data) => {
+        setDataComment(data);
+      },
+    },
+  ) as {
+    data: CommentType[];
+  };
+
+  const { mutate: createComment } = useMutation(commentService.createComment, {
     onSuccess: (data) => {
       setDataComment([data, ...dataComment]);
     },
@@ -72,16 +83,22 @@ const ItemView = ({ item: apiItem }: { item: ItemType }) => {
                   createComment({
                     itemId: item.id,
                     content: comment,
-                    userAddress: profile.address!,
+                    username: profile.username!,
+                    avatar: profile.avatar!,
                   })
                 }
               >
                 Send
               </Button>
-              <PerfectScrollbar className='min-h-[19vh] pr-4 -mr-4'>
+              <PerfectScrollbar className='max-h-[40vh] pr-4 -mr-4'>
                 <Paper className='flex flex-col gap-5 p-5'>
                   {dataComment.map((comment, index) => (
-                    <BoxComment key={index} username={comment.userAddress} content={comment.content} />
+                    <BoxComment
+                      key={index}
+                      avatar={comment.avatar}
+                      username={comment.username}
+                      content={comment.content}
+                    />
                   ))}
                 </Paper>
               </PerfectScrollbar>
