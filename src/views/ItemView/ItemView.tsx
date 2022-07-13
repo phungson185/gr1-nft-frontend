@@ -1,5 +1,6 @@
 import { Button, Container, Grid, Paper, Typography } from '@mui/material';
 import { NextLink, PerfectScrollbar, TextEditor } from 'components';
+import { useSearch } from 'hooks';
 import { CommentType } from 'models/Comment';
 import { ItemType } from 'models/Item';
 import { useState } from 'react';
@@ -15,7 +16,7 @@ const ItemView = ({ item: apiItem }: { item: ItemType }) => {
   const profile = useSelector(profileSelector);
   const [comment, setComment] = useState('');
   const [dataComment, setDataComment] = useState<CommentType[]>([]);
-
+  const [dataSearch] = useSearch({ itemId: apiItem.id });
   const { data: item } = useQuery(['nftService.getItem', { id: apiItem.id }], () => nftService.getItem(apiItem), {
     placeholderData: apiItem,
   }) as {
@@ -23,8 +24,8 @@ const ItemView = ({ item: apiItem }: { item: ItemType }) => {
   };
 
   const { data: comments } = useQuery(
-    ['commentService.getComments', { id: apiItem.id }],
-    () => commentService.getComments(apiItem.id),
+    ['commentService.getComments', dataSearch],
+    () => commentService.getComments(dataSearch),
     {
       onSuccess: (data) => {
         setDataComment(data);
