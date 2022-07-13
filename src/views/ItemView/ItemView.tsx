@@ -1,9 +1,10 @@
-import { Button, Container, Grid, Paper, Typography } from '@mui/material';
+import { CategoryOutlined } from '@mui/icons-material';
+import { Button, Container, Grid, Menu, MenuItem, Paper, Typography } from '@mui/material';
 import { NextLink, PerfectScrollbar, TextEditor } from 'components';
-import { useSearch } from 'hooks';
+import { useAnchor, useSearch } from 'hooks';
 import { CommentType } from 'models/Comment';
 import { ItemType } from 'models/Item';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 import { profileSelector } from 'reducers/profileSlice';
@@ -16,22 +17,23 @@ const ItemView = ({ item: apiItem }: { item: ItemType }) => {
   const profile = useSelector(profileSelector);
   const [comment, setComment] = useState('');
   const [dataComment, setDataComment] = useState<CommentType[]>([]);
-  const [dataSearch] = useSearch({ itemId: apiItem.id });
+  const [dataSearch, setDataSearch] = useSearch({ itemId: apiItem.id });
+  const [orderBy, setOrderBy] = useState('createdAt');
+  const [desc, setDesc] = useState('true');
+  const [anchorSort, openSort, onOpenSort, onCloseSort] = useAnchor();
+
   const { data: item } = useQuery(['nftService.getItem', { id: apiItem.id }], () => nftService.getItem(apiItem), {
     placeholderData: apiItem,
   }) as {
     data: ItemType;
   };
 
-  const { data: comments } = useQuery(
-    ['commentService.getComments', dataSearch],
-    () => commentService.getComments(dataSearch),
-    {
-      onSuccess: (data) => {
-        setDataComment(data);
-      },
+  useQuery(['commentService.getComments', dataSearch], () => commentService.getComments(dataSearch), {
+    onSuccess: (comments) => {
+      setDataComment(comments);
     },
-  ) as {
+    cacheTime: 0,
+  }) as {
     data: CommentType[];
   };
 
@@ -41,6 +43,14 @@ const ItemView = ({ item: apiItem }: { item: ItemType }) => {
     },
   });
 
+  const SORT_TYPES = [
+    { orderBy: 'createdAt', desc: 'true', name: 'Comment: Newest comment' },
+    { orderBy: 'createdAt', desc: 'false', name: 'Comment: Oldest comment' },
+  ];
+
+  useEffect(() => {
+    setDataSearch({ itemId: apiItem.id, orderBy, desc });
+  }, [setDataSearch, apiItem.id, orderBy, desc]);
   return (
     <>
       <Container className='py-20'>
@@ -77,20 +87,56 @@ const ItemView = ({ item: apiItem }: { item: ItemType }) => {
               <Typography variant='subtitle1' color='textSecondary'>
                 Comments
               </Typography>
+
               <TextEditor name='comments' onChange={setComment} />
-              <Button
-                className='my-2'
-                onClick={() =>
-                  createComment({
-                    itemId: item.id,
-                    content: comment,
-                    username: profile.username!,
-                    avatar: profile.avatar!,
-                  })
-                }
-              >
-                Send
-              </Button>
+              <div className='flex justify-between'>
+                <Button
+                  className='my-2'
+                  onClick={() =>
+                    createComment({
+                      itemId: item.id,
+                      content: comment,
+                      username: profile.username!,
+                      avatar: profile.avatar!,
+                    })
+                  }
+                >
+                  Send
+                </Button>
+
+                <Button
+                  variant='text'
+                  color='inherit'
+                  classes={{ textInherit: 'bg-white hover:brightness-90 px-4' }}
+                  startIcon={<CategoryOutlined />}
+                  onClick={onOpenSort}
+                >
+                  {SORT_TYPES.find((item) => item.orderBy === orderBy && item.desc === desc)?.name ??
+                    SORT_TYPES[0].name}
+                </Button>
+                <Menu
+                  transformOrigin={{ horizontal: 'left', vertical: 'top' }}
+                  anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+                  anchorEl={anchorSort}
+                  open={openSort}
+                  onClose={onCloseSort}
+                  onClick={onCloseSort}
+                >
+                  {SORT_TYPES.map((item, index) => (
+                    <MenuItem
+                      key={index}
+                      classes={{ selected: 'bg-info-light' }}
+                      selected={item.orderBy === orderBy && item.desc === desc}
+                      onClick={() => {
+                        setOrderBy(item.orderBy);
+                        setDesc(item.desc);
+                      }}
+                    >
+                      {item.name}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </div>
               <PerfectScrollbar className='max-h-[40vh] pr-4 -mr-4'>
                 <Paper className='flex flex-col gap-5 p-5'>
                   {dataComment.map((comment, index) => (

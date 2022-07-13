@@ -6,7 +6,6 @@ const useSearch = (search?: any) => {
   const onSearchChange = useCallback((search: any) => {
     setDataSearch((current: any) => ({
       ...current,
-      offset: 0,
       ...search,
     }));
   }, []);

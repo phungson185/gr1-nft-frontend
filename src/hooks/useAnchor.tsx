@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useCallback, useState } from 'react';
 
 const useAnchor = (init = null) => {
