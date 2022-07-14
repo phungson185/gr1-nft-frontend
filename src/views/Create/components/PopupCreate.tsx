@@ -4,7 +4,6 @@ import { minterContract } from 'contracts';
 import { PopupController } from 'models/Common';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
-import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 import { profileSelector, ProfileState } from 'reducers/profileSlice';
 import { systemSelector } from 'reducers/systemSlice';
@@ -69,13 +68,14 @@ const PopupCreate = ({ profile, values, onClose }: PopupProps) => {
         creator: {
           address,
           username: address,
-          avatar: profile.avatar,
+          avatar: profile.avatar || '',
         },
         owner: {
           address,
           username: address,
-          avatar: profile.avatar,
+          avatar: profile.avatar || '',
         },
+        ownerAddress: address,
         nftContract: nftContractAddress,
       });
       saved.current = minted.id;

@@ -1,13 +1,6 @@
 import { Close } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
-import {
-  Container,
-  Dialog,
-  FormControl, IconButton,
-  Paper,
-  TextField,
-  Typography
-} from '@mui/material';
+import { Container, Dialog, FormControl, IconButton, Paper, TextField, Typography } from '@mui/material';
 import { Spinner } from 'components';
 import { useRequiredLogin } from 'hooks';
 import { ItemType } from 'models/Item';
