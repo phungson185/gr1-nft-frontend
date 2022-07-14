@@ -60,96 +60,104 @@ const ItemView = ({ item: apiItem }: { item: ItemType }) => {
               <Grid item lg={7}>
                 <img src={item.image} className='rounded-2xl m-auto' style={{ maxHeight: 600 }} />
               </Grid>
+
               <Grid item lg={5}>
-                <Grid container spacing={10}>
-                  <Grid item xs={12}>
-                    <Typography variant='h3' className='mb-4'>
-                      {item.name}
-                    </Typography>
-                    <Typography variant='subtitle2' color='textSecondary' className='whitespace-pre-line'>
-                      {item.description}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <BoxUser image={item.creator.avatar} label='Creator' name={shorten(item.creator.address)} />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <NextLink href={`https://testnet.bscscan.com/tx/${item.transactionHash}`}>
-                      <Button>View on Bscscan</Button>
-                    </NextLink>
-                  </Grid>
-                </Grid>
+                <Paper className='p-6'>
+                  <Typography variant='subtitle1' color='textSecondary'>
+                    Comments
+                  </Typography>
+
+                  <TextEditor name='comments' onChange={setComment} />
+                  <div className='flex justify-between'>
+                    <Button
+                      className='my-2'
+                      onClick={() =>
+                        createComment({
+                          itemId: item.id,
+                          content: comment,
+                          username: profile.username!,
+                          avatar: profile.avatar!,
+                        })
+                      }
+                    >
+                      Send
+                    </Button>
+
+                    <Button
+                      variant='text'
+                      color='inherit'
+                      classes={{ textInherit: 'bg-white hover:brightness-90 px-4' }}
+                      startIcon={<CategoryOutlined />}
+                      onClick={onOpenSort}
+                    >
+                      {SORT_TYPES.find((item) => item.orderBy === orderBy && item.desc === desc)?.name ??
+                        SORT_TYPES[0].name}
+                    </Button>
+                    <Menu
+                      transformOrigin={{ horizontal: 'left', vertical: 'top' }}
+                      anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+                      anchorEl={anchorSort}
+                      open={openSort}
+                      onClose={onCloseSort}
+                      onClick={onCloseSort}
+                    >
+                      {SORT_TYPES.map((item, index) => (
+                        <MenuItem
+                          key={index}
+                          classes={{ selected: 'bg-info-light' }}
+                          selected={item.orderBy === orderBy && item.desc === desc}
+                          onClick={() => {
+                            setOrderBy(item.orderBy);
+                            setDesc(item.desc);
+                          }}
+                        >
+                          {item.name}
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                  </div>
+                  <PerfectScrollbar className='max-h-[26vh] pr-4 -mr-4'>
+                    <Paper className='flex flex-col gap-5 p-5'>
+                      {dataComment.map((comment, index) => (
+                        <BoxComment
+                          key={index}
+                          avatar={comment.avatar}
+                          username={comment.username}
+                          content={comment.content}
+                        />
+                      ))}
+                    </Paper>
+                  </PerfectScrollbar>
+                </Paper>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={7}>
-            <Paper className='p-6'>
-              <Typography variant='subtitle1' color='textSecondary'>
-                Comments
-              </Typography>
 
-              <TextEditor name='comments' onChange={setComment} />
-              <div className='flex justify-between'>
-                <Button
-                  className='my-2'
-                  onClick={() =>
-                    createComment({
-                      itemId: item.id,
-                      content: comment,
-                      username: profile.username!,
-                      avatar: profile.avatar!,
-                    })
-                  }
-                >
-                  Send
-                </Button>
+          <Grid item xs={12}>
+            <Grid container spacing={10}>
+              <Grid item xs={12}>
+                <Typography variant='h3' className='mb-4'>
+                  {item.name}
+                </Typography>
+                <Typography variant='subtitle2' color='textSecondary' className='whitespace-pre-line'>
+                  {item.description}
+                </Typography>
+              </Grid>
 
-                <Button
-                  variant='text'
-                  color='inherit'
-                  classes={{ textInherit: 'bg-white hover:brightness-90 px-4' }}
-                  startIcon={<CategoryOutlined />}
-                  onClick={onOpenSort}
-                >
-                  {SORT_TYPES.find((item) => item.orderBy === orderBy && item.desc === desc)?.name ??
-                    SORT_TYPES[0].name}
-                </Button>
-                <Menu
-                  transformOrigin={{ horizontal: 'left', vertical: 'top' }}
-                  anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-                  anchorEl={anchorSort}
-                  open={openSort}
-                  onClose={onCloseSort}
-                  onClick={onCloseSort}
-                >
-                  {SORT_TYPES.map((item, index) => (
-                    <MenuItem
-                      key={index}
-                      classes={{ selected: 'bg-info-light' }}
-                      selected={item.orderBy === orderBy && item.desc === desc}
-                      onClick={() => {
-                        setOrderBy(item.orderBy);
-                        setDesc(item.desc);
-                      }}
-                    >
-                      {item.name}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </div>
-              <PerfectScrollbar className='max-h-[40vh] pr-4 -mr-4'>
-                <Paper className='flex flex-col gap-5 p-5'>
-                  {dataComment.map((comment, index) => (
-                    <BoxComment
-                      key={index}
-                      avatar={comment.avatar}
-                      username={comment.username}
-                      content={comment.content}
-                    />
-                  ))}
-                </Paper>
-              </PerfectScrollbar>
-            </Paper>
+              <Grid item xs={3}>
+                <BoxUser image={item.creator.avatar} label='Creator' name={shorten(item.creator.address)} />
+              </Grid>
+
+              <Grid item xs={3}>
+                <BoxUser image={item.owner.avatar} label='Owner' name={shorten(item.owner.address)} />
+              </Grid>
+
+              <Grid item xs={4}>
+                <NextLink href={`https://testnet.bscscan.com/tx/${item.transactionHash}`}>
+                  <Button>View on Bscscan</Button>
+                </NextLink>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Container>

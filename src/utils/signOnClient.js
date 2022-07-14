@@ -15,7 +15,6 @@ export async function signOnClient({ userAddress, nftContractAddress }, callback
     primaryType: 'Mint',
     types: {
       Mint: [
-        { name: 'nft', type: 'address' },
         { name: 'minter', type: 'address' },
         { name: 'to', type: 'address' },
       ],

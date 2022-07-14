@@ -81,12 +81,10 @@ const PopupCreate = ({ profile, values, onClose }: PopupProps) => {
       saved.current = minted.id;
       queryClient.invalidateQueries('nftService.fetchItems');
       setCreateStatus('SUCCESS');
-    } catch {
+    } catch (error) {
       setCreateStatus('ERROR');
     }
   };
-
-  useQuery([''], () => onSign());
 
   return (
     <>

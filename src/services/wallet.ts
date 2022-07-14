@@ -48,7 +48,6 @@ const connectWallet = async () => {
     store.dispatch(signIn({ address, accessToken }));
 
     const profile = await userService.getUserProfile({ address });
-    console.log(profile);
     store.dispatch(signIn({ ...profile }));
   } catch (error) {
     console.warn(error);
