@@ -1,5 +1,5 @@
 import { AppBar, Button, Container, MenuItem, Toolbar } from '@mui/material';
-import { NextLink } from 'components';
+import { NextImage, NextLink } from 'components';
 import { useAnchor } from 'hooks';
 import { useMutation } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,26 +20,30 @@ const Header = () => {
     <AppBar position='sticky' className='bg-info-dark'>
       <Toolbar>
         <Container>
-          <div className='flex gap-4'>
+          <div className='flex items-center'>
+            <NextLink href={publicRoute.home.path}>
+              <a className='flex items-center'>
+                <NextImage src={require('assets/icons/NFT_Icon.png').default.src} width={145} height={40} />
+              </a>
+            </NextLink>
+            <div className='flex-1' />
             {isLoggedIn ? (
-              <>
+              <div className='flex items-center gap-4'>
                 <NextLink href={publicRoute.create.path}>
                   <a>
                     <Button color='info'>Create</Button>
                   </a>
                 </NextLink>
+                <NextLink href={publicRoute.profile.path}>
+                  <a>
+                    <MenuItem>Profile</MenuItem>
+                  </a>
+                </NextLink>
                 <Button onClick={onOpen}>{shorten(address)}</Button>
-                  <NextLink href={publicRoute.profile.path}>
-                    <a>
-                      <MenuItem>Profile</MenuItem>
-                    </a>
-                  </NextLink>
-                  <MenuItem onClick={() => dispatch(signOut())}>Disconnect</MenuItem>
-              </>
+                <MenuItem onClick={() => dispatch(signOut())}>Disconnect</MenuItem>
+              </div>
             ) : (
-              <>
-                <Button onClick={() => connectWallet()}>Connect Wallet</Button>
-              </>
+              <Button onClick={() => connectWallet()}>Connect Wallet</Button>
             )}
           </div>
         </Container>

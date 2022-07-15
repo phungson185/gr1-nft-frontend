@@ -9,13 +9,9 @@ const Banner = () => {
       <Container className='flex items-center h-[720px] relative'>
         <div className='flex-1 mr-6 text-white max-w-md'>
           <Typography variant='h3' className='mb-4'>
-            Discover, Collect and Sell Extraordinary NFTs
+            NFT Discussion
           </Typography>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquam etiam rhoncus aenean a iaculis aliquet
-            rhoncus sed. Accumsan sit consequat, sodales consectetur. Egestas scelerisque ut dui sed nulla morbi quam
-            eget luctus. In a vel morbi sed nisi.
-          </Typography>
+          <Typography>A social network for NFTs. Create your own NFT and share it with the world.</Typography>
         </div>
       </Container>
     </div>
