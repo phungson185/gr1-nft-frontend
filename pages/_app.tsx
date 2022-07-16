@@ -17,7 +17,11 @@ const App = ({ Component, emotionCache = createCache({ key: 'css' }), pageProps 
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>NFT</title>
+        <title>Gr1 | A social network for NFTs</title>
+
+        <meta property='og:type' content='website' />
+        <meta property='og:title' content='Gr1 | A social network for NFTs' key='title' />
+        <meta property='og:url' content='/' />
       </Head>
       <AppTheme>
         <CssBaseline />
