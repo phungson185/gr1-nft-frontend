@@ -22,6 +22,7 @@ const App = ({ Component, emotionCache = createCache({ key: 'css' }), pageProps 
         <meta property='og:type' content='website' />
         <meta property='og:title' content='Gr1 | A social network for NFTs' key='title' />
         <meta property='og:url' content='/' />
+        <meta property='og:image' content='../public/favicon.png' />
       </Head>
       <AppTheme>
         <CssBaseline />
