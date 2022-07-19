@@ -163,9 +163,13 @@ const ItemView = ({ item: apiItem }: { item: ItemType }) => {
               </Grid>
 
               <Grid item xs={4}>
-                <NextLink href={`https://testnet.bscscan.com/tx/${item.transactionHash}`}>
-                  <Button>View on Bscscan</Button>
-                </NextLink>
+                {profile.address ? (
+                  <NextLink href={`https://testnet.bscscan.com/tx/${item.transactionHash}`}>
+                    <Button>View on Bscscan</Button>
+                  </NextLink>
+                ) : (
+                  <Button onClick={() => connectWallet()}>Connect wallet</Button>
+                )}
               </Grid>
             </Grid>
           </Grid>
